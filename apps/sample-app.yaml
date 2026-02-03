@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sample-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Sakshika08/gitops-lab-platform.git   # updated
+    targetRevision: main                                        # update if using another branch
+    path: services/sample-app/k8s
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: sample-app
+  syncPolicy:
+    automated:
+      prune: true          # delete resources removed from Git
+      selfHeal: true       # fix drift if someone kubectl-applies
+    syncOptions:
+      - CreateNamespace=true    # creates 'sample-app' if missing
+      - ApplyOutOfSyncOnly=true # faster syncs
