@@ -1,0 +1,20 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-image-digest
+spec:
+  validationFailureAction: enforce
+  rules:
+    - name: check-digest
+      match:
+        resources:
+          kinds:
+            - Deployment
+      validate:
+        message: "Images must use digest instead of tags."
+        deny:
+          conditions:
+            any:
+              - key: "{{ images.containers[].image }}"
+                operator: NotMatches
+                value: ".*@sha256:.*"

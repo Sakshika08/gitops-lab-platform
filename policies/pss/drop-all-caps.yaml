@@ -1,0 +1,22 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: drop-capabilities
+spec:
+  validationFailureAction: enforce
+  background: true
+  rules:
+    - name: drop-all-caps
+      match:
+        resources:
+          kinds:
+            - Pod
+      validate:
+        message: "Containers must drop all Linux capabilities."
+        pattern:
+          spec:
+            containers:
+              - securityContext:
+                  capabilities:
+                    drop:
+                      - ALL
