@@ -1,0 +1,23 @@
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Node/Go/python etc. (in case you build a sample service later)
+node_modules/
+dist/
+venv/
+__pycache__/
+
+# Docker artifacts
+*.tar
+
+# Minikube / local kube configs (never commit)
+.kube/
+.minikube/
+
+# Editor swap files
+*~
+*.swp
