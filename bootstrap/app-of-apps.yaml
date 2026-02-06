@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-root                       # This is the ROOT GitOps app
+  namespace: argocd                         # Argo CD always lives here
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/Sakshika08/gitops-lab-platform.git
+    targetRevision: main
+    path: apps                               # <--- Important: all child apps live here
+
+    directory:
+      recurse: true                           # Look for all YAMLs inside apps/
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true

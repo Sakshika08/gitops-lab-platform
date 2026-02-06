@@ -1,12 +1,10 @@
 #!/bin/bash
+set -e
 
-echo "Installing Kyverno..."
+echo "[+] Installing Kyverno..."
+# Apply the latest Kyverno release manifest (CRDs + controller + webhooks)
+kubectl apply -f https://github.com/kyverno/kyverno/releases/latest/download/install.yaml
 
-kubectl create namespace kyverno || true
+# Wait until Kyverno deployments are Available in the 'kyverno' namespace
+kubectl wait -n kyverno deploy --all --for=condition=Available --timeout=300s
 
-kubectl apply -f https://raw.githubusercontent.com/kyverno/kyverno/main/config/release/install.yaml
-
-echo "Waiting for Kyverno pods..."
-kubectl wait --for=condition=Ready pods --all -n kyverno --timeout=300s
-
-echo "Kyverno installed successfully!"
